@@ -94,5 +94,47 @@ Here is the [link](https://serenity-bdd.github.io/theserenitybook/latest/index.h
 1-under EU10 create `spartan` and under spartan create `admin` packages
 2-create a class called `SpartanAdminGetTest`
 
+6.Create regular @Test rest api class `getAllSpartan` and send a request.
+
+7.This is just regular test, in order to make it recognized by serenity reports
+* add annotation class lever: `@SerenityTest` 
+* it is coming from `import net.serenitybdd.junit5.SerenityTest`;
+
+8.Add a properties file with exact name `serenity.properties` right under project level
+* add following line to properties file
+```properties
+serenity.project.name=EU10 API Report
+serenity.test.root=EU10
+```
+
+9.In order to generate serenity report, we need to use maven goal
+* if ypu are using command line:  `mvn clean verify` cmd+enter or ctrl+enter if you dont have maven installed locally
+*  if you are using Intellij buttons;
+   * first click on clean then click on verify
+* your report will be generated under target as HTML Report
+
+10.This is for serenity to pick up log and eliminate the warning
+```
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-simple</artifactId>
+    <version>1.7.30</version>
+</dependency>
+```
+
+11.We were able to generate test report, however there are no details about the request and response. In order to see the details then we need to use the `given() when() then()` methods coming from Serenity.
+
+* Instead of importing rest assured given import,use below
+  * `Import static net.serenitybdd.rest.SerenityRest.given;`
+* From this point on, all details will be picked up by Serenity report, you will see **Rest Query** button on the individual tests
+
+12.The way that assert the response and show it as a steps in Serenity report is using Ensure class (from `import net.serenitybdd.rest.Ensure;`)
+```
+ Ensure.that("Status code is 200",validatableResponse -> validatableResponse.statusCode(201) );
+
+ Ensure.that("Content-type is JSON",vRes -> vRes.contentType(ContentType.JSON));
+
+ Ensure.that("Id is 15", vRes -> vRes.body("id",is(15)));
+```
 
 
